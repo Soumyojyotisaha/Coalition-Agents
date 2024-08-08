@@ -27,7 +27,7 @@ print (wcss)
 plt.plot(range(1,11),wcss)
 
 X = data.iloc[:,:].values
-km = KMeans(n_clusters=4, random_state=0)
+km = KMeans(n_clusters=10, random_state=0) #modified the number of clusters
 y_means = km.fit_predict(X)
 print(y_means)
 print(X[y_means == 3,1])
@@ -54,29 +54,32 @@ res2 = 8180
 res3 = 10871
 # W=(7844+8180+10871)
 W = 83683
-agent=int(input("enter no of agents: "))
+agent = int(input("Enter the number of agents: "))
+filenum = int(input("Enter the file number: "))
 
 def value_calc(a_list):
-    # all_agent = [i for i in range(agent)]
-    ag = list(range(0, agent))
+    """Calculate the combined land value for a given coalition."""
+    ag = list(range(agent))
     land1 = []
     index = []
-    with open('land_value_shuffeled_15.txt') as f:
+    
+    # Construct the filename using the file number
+    filename = f'land_value_shuffeled_{filenum}.txt'
+    
+    # Read the land values from the file
+    with open(filename) as f:
         lines = f.read().splitlines()
-    for i in lines:
-        land1.append(i)
-        for i in range(0, len(land1)):
-            land1[i] = float(land1[i])
-    # print("coalition values:", land1)
-    for j in a_list:
-        index.append(ag.index(j))
-    # print ("index of the agents: ",index)
-    coalition_land = list(map(lambda x: land1[x], index))
-    # print("land of the corresponding lands: ",coalition_land)
-
-    # print("combined land of a coalition: ",sum(coalition_land))
+    
+    # Convert land values to float
+    land1 = [float(line) for line in lines]
+    
+    # Get the indices of the agents in the coalition
+    index = [ag.index(j) for j in a_list]
+    
+    # Calculate the land values for the coalition
+    coalition_land = [land1[x] for x in index]
+    
     return sum(coalition_land)
-
 
 def discount(b_list):
     coal_val_final = []
